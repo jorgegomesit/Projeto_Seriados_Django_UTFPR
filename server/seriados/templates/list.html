@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Lista de {{ title }}</h1>
+    <td><a href="inserir">Nova {{ title }}...</a></td>
+    <br>
+    <br>
+    <table border="1px">
+        <tr>
+            {% for label in labels %}<th>{{ label }}</th>{% endfor %}
+            <th>Detalhes</th>
+            <th>Edição</th>
+            <th>Remoção</th>
+        </tr>
+        {% for row in rows %}
+            <tr>
+                {% for value in row.data %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                <td><a href={% url detail_url pk=row.pk %}>Ver...</a></td>
+                <td><a href={% url detail_url pk=row.pk%}editar>Editar...</a></td>
+                <td><a href={% url detail_url pk=row.pk %}excluir>Excluir...</a></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Procurar {{ title }}</h3>
+
+    <input id='input_search' type="text" placeholder="Search.."/>
+    <button id="btn_search">Procurar {{ title }}</button>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#btn_search").click(function() {
+                search = $("#input_search").val();
+                url = '{% url list_url %}' + '?' +  $.param({search:search});
+                window.location.href = url;
+            });
+        });
+    </script>
+
+{% endblock content %}

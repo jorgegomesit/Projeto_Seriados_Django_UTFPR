@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Lista de Episodios por nota {{ nota }}</h1>
+    <td><a href="{% url 'seriados:episodios_insert' %}">Novo Episódio...</a></td>
+<br>
+<br>
+    <table border=1>
+        <tr>
+            <th>Titulo</th>
+            <th>Data</th>
+            <th>Detalhes</th>
+            <th>Edição</th>
+            <th>Remoção</th>
+        </tr>
+        {% for obj in objects %}
+            <tr>
+                <td>{{ obj.titulo }}</td>
+                <td>{{ obj.data }}</td>
+                <td><a href="{{ obj.get_absolute_url }}">Ver...</a></td>
+                <td><a href="{{ obj.get_absolute_url }}editar">Editar...</a></td>
+                <td><a href="{{ obj.get_absolute_url }}excluir">Excluir...</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock  %}

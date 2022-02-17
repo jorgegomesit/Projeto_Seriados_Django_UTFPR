@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block  content %}
+<br>
+Quer deletar o episódio {{object.titulo}} da temporada
+{{object.temporada}}? <br />
+<br>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+</form>
+
+{% endblock  %}
+
+

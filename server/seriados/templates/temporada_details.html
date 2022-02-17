@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>
+        Detalhes da Temporada</h1>
+        <table border="1px">
+            <tr>
+                <th>Série</th>
+                <th>Temporada</th>
+                <th>Edição</th>
+                <th>Remoção</th>
+            </tr>
+        
+            
+            <tr>
+                <td>{{ object.serie.nome }}</td>
+                <td>{{ object.numero }}</td>
+                <td><a href="editar">Editar...</a></td>
+                <td><a href="excluir">Excluir...</a></td>
+               </tr>
+           
+        </table>
+        
+{% endblock content %}

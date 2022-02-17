@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Detalhes de {{ title }}</h1>
+    <table border="1px">
+        <tr>
+            {% for row in data %}<th>{{ row.label }}</th>{% endfor %}
+            <th>Edição</th>
+            <th>Remoção</th>
+        </tr>
+        <tr>
+            {% for row in data %}<td>{{ row.value }}</td>{% endfor %}
+            <td>
+                <a href="editar">Editar...</a>
+            </td>
+            <td>
+                <a href="excluir">Excluir...</a>
+            </td>
+        </tr>
+    </table>
+{% endblock content %}

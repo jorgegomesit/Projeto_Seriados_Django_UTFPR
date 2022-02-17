@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block  content %}
+<br>
+Quer deletar o revisor {{object.user}} ?<br /><br />
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+</form>
+
+{% endblock  %}
+
+

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content  %}
+<br>
+<form action={% url target_url %} method="post">
+    <br>
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Enviar">
+</form>
+{% endblock  %}
+

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>
+        Detalhes da Séries</h1>
+        <table border="1px">
+            <tr>
+                <th>Série</th>
+                <th>Edição</th>
+                <th>Remoção</th>
+            </tr>
+        
+            
+            <tr>
+                <td>{{ object.nome }}</td>
+                <td><a href="editar">Editar...</a></td>
+                <td><a href="excluir">Excluir...</a></td>
+               </tr>
+           
+        </table>
+        
+{% endblock content %}

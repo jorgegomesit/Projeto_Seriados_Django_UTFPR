@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Lista de Temporadas</h1>
+<td><a href="inserir">Nova Temporadas...</a></td>
+<br>
+<br>
+
+<table border="1px">
+    <tr>
+        <th>Série</th>
+        <th>Temporada</th>
+        <th>Detalhes</th>
+        <th>Edição</th>
+        <th>Remoção</th>
+    </tr>
+
+    {% for object in object_list %}
+        <tr>
+            <td>{{ object.serie.nome }}</td>
+            <td>{{ object.numero }}</td>
+            <td><a href="{{ object.get_absolute_url }}">Ver...</a></td>
+            <td><a href="{{ object.pk }}/editar">Editar...</a></td>
+            <td><a href="{{ object.pk }}/excluir">Excluir...</a></td>
+        </tr>
+        
+    {% endfor %}
+</table>
+
+<h3>Procurar por temporada</h3>
+
+<input id='input_search' type="text" placeholder="Search.."/>
+<button id="btn_search">Procurar por temporada</button>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous">
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#btn_search").click(function() {
+            search = $("#input_search").val();
+            url = {% url 'seriados:temporadas_list' %} + '?' +  $.param({search:search});
+            window.location.href = url;
+        });
+    });
+</script>
+{% endblock %}
