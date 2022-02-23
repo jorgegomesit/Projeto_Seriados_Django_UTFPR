@@ -1,5 +1,7 @@
 from re import template
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
@@ -61,17 +63,17 @@ def episodios_list(request):
     }
     return render(request, 'list.html', context)
 
-class EpisodioCreateView(CreateView):
+class EpisodioCreateView(LoginRequiredMixin, CreateView):
     template_name = 'form_generic.html'
     model = Episodio
     fields = ['temporada','data','titulo']
     
-class EpisodiosUpdateView(UpdateView):
+class EpisodiosUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form_generic.html'
     model = Episodio
     fields = ['temporada','data','titulo'] 
        
-class EpisodiosDeleteView(DeleteView):
+class EpisodiosDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'episodios_cohfirm_delete.html'
     model = Episodio
     
@@ -79,7 +81,7 @@ class EpisodiosDeleteView(DeleteView):
         return reverse('seriados:episodios_list')
 
 
-class EpisodiosBuscaLisView(ListView):
+class EpisodiosBuscaLisView(LoginRequiredMixin, ListView):
     template_name = 'episodios_busca_list.html'
     model = Episodio
     
@@ -126,16 +128,16 @@ def revisores_list(request):
     }
     return render(request, 'list.html', context)
 
-class RevisoresCreateView(CreateView):
+class RevisoresCreateView(LoginRequiredMixin, CreateView):
     template_name = 'form_generic.html'
     form_class = RevisoresForm
     
-class RevisoresUpdateView(UpdateView):
+class RevisoresUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form_generic.html'
     model = Revisor
     fields = ['user','reviews_episodios']
     
-class RevisoresDeleteView(DeleteView):
+class RevisoresDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'revisores_cohfirm_delete.html'
     model = Revisor
     
@@ -170,16 +172,16 @@ def review_episodios_list(request):
 
     
 
-class ReviewEpisodiosCreateView(CreateView):
+class ReviewEpisodiosCreateView(LoginRequiredMixin, CreateView):
     template_name = 'form_generic.html'
     form_class = ReviewEpisodiosForm
     
-class ReviewEpisodiosUpdateView(UpdateView):
+class ReviewEpisodiosUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form_generic.html'
     model = ReviewEpisodio
     fields = ['episodio','revisor','nota']
     
-class ReviewEpisodiosDeleteView(DeleteView):
+class ReviewEpisodiosDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'revisores_episodios_cohfirm_delete.html'
     model = ReviewEpisodio
     
@@ -198,7 +200,7 @@ class HomeView(View):
     def get(self, request):
         return render(request, 'home.html', {})
 
-class TemporadaListView(ListView):
+class TemporadaListView(LoginRequiredMixin, ListView):
     template_name = 'temporada_list.html'
     model = Temporada
     
@@ -218,27 +220,27 @@ class TemporadaListView(ListView):
     
      
     
-class TemporadaDetails(DetailView):
+class TemporadaDetails(LoginRequiredMixin, DetailView):
     template_name = 'temporada_details.html'
     model = Temporada
     
-class TemporadaCreateView(CreateView):
+class TemporadaCreateView(LoginRequiredMixin, CreateView):
     template_name = 'form_generic.html'
     form_class = TemporadaForm
     
-class TemporadaUpdateView(UpdateView):
+class TemporadaUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form_generic.html'
     model = Temporada
     fields = ['serie','numero']
     
-class TemporadaDeleteView(DeleteView):
+class TemporadaDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'temporada_cohfirm_delete.html'
     model = Temporada
     
     def get_success_url(self):
         return reverse('seriados:temporada_list')
     
-class SerieListView(ListView):
+class SerieListView(LoginRequiredMixin, ListView):
     template_name = 'series_list.html'
     model = Serie
     
@@ -256,10 +258,11 @@ class SerieListView(ListView):
         qs = super().get_queryset().filter(q)
         return qs
         
-class SerieDetailsView(DetailView):
+class SerieDetailsView(LoginRequiredMixin, DetailView):
     template_name = 'series_details.html'
     model = Serie
-
+    
+@login_required
 def series_insert(request):
     if  request.method == 'GET':
         form = SerieForm()
@@ -278,12 +281,12 @@ def series_insert(request):
         'target_url': 'seriados:series_insert',
     })
 
-class SeriesUpdateView(UpdateView):
+class SeriesUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form_generic.html'
     model = Serie
     fields = ['nome']
     
-class SeriesDeleteView(DeleteView):
+class SeriesDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'series_cohfirm_delete.html'
     model = Serie
     
