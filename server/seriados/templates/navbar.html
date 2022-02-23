@@ -14,6 +14,9 @@
             <a class="dropdown-item" href={% url 'seriados:episodios_list' %}>Todos</a>
         </li>
         <li>
+            <a class="dropdown-item" href={% url 'seriados:episodios_busca_list' %}>Busca Avançada</a>
+        </li>
+        <li>
             <a class="dropdown-item"
                href={% url 'seriados:episodio_nota_list' nota='A' %}>Nota A</a>
         </li>
@@ -41,7 +44,7 @@
             <a class="dropdown-item" href={% url 'seriados:revisores_list' %}>Revisores</a>
         </li>
         <li>
-            <a class="dropdown-item" href={% url 'seriados:revisores_list' %}>Reviews de Episódios</a>
+            <a class="dropdown-item" href={% url 'seriados:review_episodios_list' %}>Reviews de Episódios</a>
         </li>
         
     </ul>

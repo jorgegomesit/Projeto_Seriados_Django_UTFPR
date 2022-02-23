@@ -15,6 +15,7 @@ urlpatterns = [
     path('episodios/inserir/', views.EpisodioCreateView.as_view(),name='episodios_insert'),
     path('episodios/<int:pk>/editar', views.EpisodiosUpdateView.as_view(),name='episodios_update'),
     path('episodios/<int:pk>/excluir/', views.EpisodiosDeleteView.as_view(),name='episodios_excluir'),
+    path('episodios/busca/', views.EpisodiosBuscaLisView.as_view(),name='episodios_busca_list'),
     
     path('episodios/nota/<str:nota>/', views.episodio_nota_list,name='episodio_nota_list'),
     
@@ -34,6 +35,7 @@ urlpatterns = [
     path('contato/', views.Contact.as_view(), name='contact'),
    
     path('home', views.HomeView.as_view(), name='home'),
+    path('', views.HomeView.as_view(), name='home'),
     
     path('temporadas/', views.TemporadaListView.as_view(), name='temporadas_list'),
     path('temporadas/<int:pk>/', views.TemporadaDetails.as_view(), name='temporadas_details'),

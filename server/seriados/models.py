@@ -81,12 +81,13 @@ class ReviewEpisodio(models.Model):
         verbose_name="Nota"
     )
     
+    
     class Meta:
         verbose_name = "Review Episódio"
         verbose_name_plural = "Reviews Episódios"
     
     def __str__(self):
-        return '%s %s %s' % (self.episodio, self.revisor,self.nota)
+        return f"{self.episodio.titulo}: {self.revisor.user} : {self.nota}"
     
     def get_absolute_url(self):
         return reverse("seriados:review_episodios_details", kwargs={"pk": self.pk})

@@ -1,3 +1,6 @@
+from re import template
+
+from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -75,6 +78,27 @@ class EpisodiosDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('seriados:episodios_list')
 
+
+class EpisodiosBuscaLisView(ListView):
+    template_name = 'episodios_busca_list.html'
+    model = Episodio
+    
+    def get_queryset(self):
+        search = self.request.GET.get('search', "")
+        q = Q(titulo__contains=search) | Q(temporada__serie__nome__contains=search)
+        for term in search.split():
+            q = q | Q(titulo__contains=term)
+            q = q | Q(temporada__serie__nome__contains=term)
+            try:
+                i_term = int(term)
+            except ValueError:
+                pass
+            else:
+                q = q | Q(temporada__numero=i_term)
+        qs = super().get_queryset().filter(q)
+        return qs
+
+
 def revisores_details(resquest, pk):
     _object = get_object_or_404(Revisor, pk=pk)
     context = {
@@ -133,7 +157,6 @@ def review_episodios_list(request):
         objects = ReviewEpisodio.objects.all()
     else:
         objects = ReviewEpisodio.objects.filter(episodio_id=search)
-        
     labels, rows = prepare_data_list(objects,['episodio','revisor','nota'] )
     context = {
         'title': "Review Episodios",
@@ -144,6 +167,8 @@ def review_episodios_list(request):
 
     }
     return render(request, 'list.html', context)
+
+    
 
 class ReviewEpisodiosCreateView(CreateView):
     template_name = 'form_generic.html'
@@ -159,7 +184,7 @@ class ReviewEpisodiosDeleteView(DeleteView):
     model = ReviewEpisodio
     
     def get_success_url(self):
-        return reverse('seriados:revisores_list')
+        return reverse('seriados:review_episodios_list')
 
 def episodio_nota_list(request, nota):
     objects = Episodio.objects.filter(reviewepisodio__nota=nota)
@@ -177,6 +202,21 @@ class TemporadaListView(ListView):
     template_name = 'temporada_list.html'
     model = Temporada
     
+    def get_queryset(self):
+        search = self.request.GET.get('search', "")
+        q = Q(serie__nome__contains=search)
+        for term in search.split():
+            q = q | Q(serie__nome__contains=term)
+            try:
+                i_term = int(term)
+            except ValueError:
+                pass
+            else:
+                q = q | Q(numero=i_term)
+        qs = super().get_queryset().filter(q)
+        return qs
+    
+     
     
 class TemporadaDetails(DetailView):
     template_name = 'temporada_details.html'
@@ -201,6 +241,20 @@ class TemporadaDeleteView(DeleteView):
 class SerieListView(ListView):
     template_name = 'series_list.html'
     model = Serie
+    
+    def get_queryset(self):
+        search = self.request.GET.get('search', "")
+        q = Q(nome__contains=search)
+        for term in search.split():
+            q = q | Q(nome__contains=term)
+            try:
+                i_term = int(term)
+            except ValueError:
+                pass
+            else:
+                q = q | Q(nome=i_term)
+        qs = super().get_queryset().filter(q)
+        return qs
         
 class SerieDetailsView(DetailView):
     template_name = 'series_details.html'

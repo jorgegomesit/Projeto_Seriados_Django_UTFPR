@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-{% block  %}
-Quer deletar a review do revisor {{object.revisor}} ? <br />
-
+{% block content %}
+<br>
+Quer deletar a review do revisor {{object.revisor.user}} ? <br />
+<br>
 <form action="" method="post">
     {% csrf_token %}
     <input type="submit" value="Delete">

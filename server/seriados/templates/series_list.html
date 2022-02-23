@@ -33,18 +33,14 @@
 <input id='input_search' type="text" placeholder="Search.."/>
 <button id="btn_search">Procurar por séries</button>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-    crossorigin="anonymous">
-</script>
-
 <script type="text/javascript">
     $(document).ready(function() {
         $("#btn_search").click(function() {
             search = $("#input_search").val();
-            url = {% url 'seriados:series_list' %} + '?' +  $.param({search:search});
+            url = '{% url 'seriados:series_list' %}' + '?' +  $.param({search:search});
             window.location.href = url;
         });
     });
-</script>
+    </script>
+
 {% endblock %}
