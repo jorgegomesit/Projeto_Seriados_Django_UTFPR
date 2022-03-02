@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+   <h3>Post:</h3>
+    <table border="1px">
+        <tr>
+            {% for row in data %}<th>{{ row.label }}</th> {% endfor %}
+        </tr>
+        <tr>
+            {% for row in data %}
+            <td>{{ row.value }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock content %}

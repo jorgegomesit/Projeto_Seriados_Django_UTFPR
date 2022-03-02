@@ -49,4 +49,12 @@ urlpatterns = [
     path('series/<int:pk>/editar', views.SeriesUpdateView.as_view(),name='series_update'),
     path('series/<int:pk>/excluir/', views.SeriesDeleteView.as_view(),name='series_excluir'),
   
+    path('blog',views.blog_list,name='blog_list'),
+    path('blog/<int:pk>/', views.post_details,name='blog_post'),
+    path('blog/categoria/<int:pk>/', views.categorias_details,name='blog_categorias'),
+
+
+
+
+
    ]   

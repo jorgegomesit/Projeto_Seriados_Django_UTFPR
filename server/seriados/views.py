@@ -1,7 +1,8 @@
 from re import template
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
@@ -12,7 +13,8 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .forms import ReviewEpisodiosForm, RevisoresForm, SerieForm, TemporadaForm
-from .models import Episodio, ReviewEpisodio, Revisor, Serie, Temporada
+from .models import (Blog, Categoria, Episodio, ReviewEpisodio, Revisor, Serie,
+                     Temporada)
 
 
 def prepare_data_list(objects, fields_name):
@@ -41,6 +43,8 @@ def prepare_data_detail(_object, fields_name):
         rows.append({'label': field.verbose_name, 'value': data[field_name]})
     return rows
 
+@login_required
+@permission_required('seriados.view_episodio', raise_exception=True)
 def episodios_details(resquest, pk):
     _object = get_object_or_404(Episodio, pk=pk)
     context = {
@@ -49,7 +53,8 @@ def episodios_details(resquest, pk):
     }
     return render(resquest, 'details.html', context)
   
-
+@login_required
+@permission_required('seriados.view_episodio', raise_exception=True)
 def episodios_list(request):
     search = request.GET.get('search',"")
     objects = Episodio.objects.filter(titulo__contains=search)
@@ -63,17 +68,20 @@ def episodios_list(request):
     }
     return render(request, 'list.html', context)
 
-class EpisodioCreateView(LoginRequiredMixin, CreateView):
+class EpisodioCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
+    permission_required='seriados.add_episodio'
     template_name = 'form_generic.html'
     model = Episodio
     fields = ['temporada','data','titulo']
     
-class EpisodiosUpdateView(LoginRequiredMixin, UpdateView):
+class EpisodiosUpdateView(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
+    permission_required = ('seriados.view_episodio','seriados.change_episodio')
     template_name = 'form_generic.html'
     model = Episodio
     fields = ['temporada','data','titulo'] 
        
-class EpisodiosDeleteView(LoginRequiredMixin, DeleteView):
+class EpisodiosDeleteView(LoginRequiredMixin,PermissionRequiredMixin, DeleteView):
+    permission_required='seriados.delete_episodio'
     template_name = 'episodios_cohfirm_delete.html'
     model = Episodio
     
@@ -81,7 +89,8 @@ class EpisodiosDeleteView(LoginRequiredMixin, DeleteView):
         return reverse('seriados:episodios_list')
 
 
-class EpisodiosBuscaLisView(LoginRequiredMixin, ListView):
+class EpisodiosBuscaLisView(LoginRequiredMixin,PermissionRequiredMixin, ListView):
+    permission_required='seriados.view_episodio'
     template_name = 'episodios_busca_list.html'
     model = Episodio
     
@@ -100,7 +109,8 @@ class EpisodiosBuscaLisView(LoginRequiredMixin, ListView):
         qs = super().get_queryset().filter(q)
         return qs
 
-
+@login_required
+@permission_required('seriados.view_revisor', raise_exception=True)
 def revisores_details(resquest, pk):
     _object = get_object_or_404(Revisor, pk=pk)
     context = {
@@ -109,7 +119,8 @@ def revisores_details(resquest, pk):
     }
     return render(resquest, 'details.html', context)
   
-
+@login_required
+@permission_required('seriados.view_revisor', raise_exception=True)
 def revisores_list(request):
     search = request.GET.get('search',"")
     if search == "" :
@@ -128,22 +139,27 @@ def revisores_list(request):
     }
     return render(request, 'list.html', context)
 
-class RevisoresCreateView(LoginRequiredMixin, CreateView):
+class RevisoresCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
+    permission_required = 'seriados.add_revisor'
     template_name = 'form_generic.html'
     form_class = RevisoresForm
     
-class RevisoresUpdateView(LoginRequiredMixin, UpdateView):
+class RevisoresUpdateView(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
+    permission_required = ('seriados.view_revisor','seriados.change_revisores')
     template_name = 'form_generic.html'
     model = Revisor
     fields = ['user','reviews_episodios']
     
-class RevisoresDeleteView(LoginRequiredMixin, DeleteView):
+class RevisoresDeleteView(LoginRequiredMixin,PermissionRequiredMixin, DeleteView):
+    permission_required='seriados.delete_revisor'
     template_name = 'revisores_cohfirm_delete.html'
     model = Revisor
     
     def get_success_url(self):
         return reverse('seriados:revisores_list')
 
+@login_required
+@permission_required('seriados.view_reviewepisodio', raise_exception=True)
 def review_episodios_details(resquest, pk):
     _object = get_object_or_404(ReviewEpisodio, pk=pk)
     context = {
@@ -152,7 +168,8 @@ def review_episodios_details(resquest, pk):
     }
     return render(resquest, 'details.html', context)
   
-
+@login_required
+@permission_required('seriados.view_reviewepisodio', raise_exception=True)
 def review_episodios_list(request):
     search = request.GET.get('search',"")
     if search == "" :
@@ -172,22 +189,27 @@ def review_episodios_list(request):
 
     
 
-class ReviewEpisodiosCreateView(LoginRequiredMixin, CreateView):
+class ReviewEpisodiosCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
+    permission_required='seriados.add_reviewepisodio'
     template_name = 'form_generic.html'
     form_class = ReviewEpisodiosForm
     
-class ReviewEpisodiosUpdateView(LoginRequiredMixin, UpdateView):
+class ReviewEpisodiosUpdateView(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
+    permission_required = ('seriados.view_reviewepisodio','seriados.change_reviewepisodio')
     template_name = 'form_generic.html'
     model = ReviewEpisodio
     fields = ['episodio','revisor','nota']
     
-class ReviewEpisodiosDeleteView(LoginRequiredMixin, DeleteView):
+class ReviewEpisodiosDeleteView(LoginRequiredMixin,PermissionRequiredMixin, DeleteView):
+    permission_required='seriados.delete_reviewepisodio'
     template_name = 'revisores_episodios_cohfirm_delete.html'
     model = ReviewEpisodio
     
     def get_success_url(self):
         return reverse('seriados:review_episodios_list')
 
+@login_required
+@permission_required('seriados.view_episodio', raise_exception=True)
 def episodio_nota_list(request, nota):
     objects = Episodio.objects.filter(reviewepisodio__nota=nota)
     context = {'objects': objects, 'nota':nota,}
@@ -200,7 +222,8 @@ class HomeView(View):
     def get(self, request):
         return render(request, 'home.html', {})
 
-class TemporadaListView(LoginRequiredMixin, ListView):
+class TemporadaListView(LoginRequiredMixin,PermissionRequiredMixin, ListView):
+    permission_required='seriados.view_temporada'
     template_name = 'temporada_list.html'
     model = Temporada
     
@@ -220,27 +243,32 @@ class TemporadaListView(LoginRequiredMixin, ListView):
     
      
     
-class TemporadaDetails(LoginRequiredMixin, DetailView):
+class TemporadaDetails(LoginRequiredMixin,PermissionRequiredMixin, DetailView):
+    permission_required = 'seriados.view_temporada'
     template_name = 'temporada_details.html'
     model = Temporada
     
-class TemporadaCreateView(LoginRequiredMixin, CreateView):
+class TemporadaCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
+    permission_required = 'seriados.add_temporada'
     template_name = 'form_generic.html'
     form_class = TemporadaForm
     
-class TemporadaUpdateView(LoginRequiredMixin, UpdateView):
+class TemporadaUpdateView(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
+    permission_required = ('seriados.view_temporada','seriados.change_temporada')
     template_name = 'form_generic.html'
     model = Temporada
     fields = ['serie','numero']
     
-class TemporadaDeleteView(LoginRequiredMixin, DeleteView):
+class TemporadaDeleteView(LoginRequiredMixin,PermissionRequiredMixin, DeleteView):
+    permission_required='seriados.delete_temporada'
     template_name = 'temporada_cohfirm_delete.html'
     model = Temporada
     
     def get_success_url(self):
         return reverse('seriados:temporada_list')
     
-class SerieListView(LoginRequiredMixin, ListView):
+class SerieListView(LoginRequiredMixin,PermissionRequiredMixin, ListView):
+    permission_required = 'seriados.view_serie'
     template_name = 'series_list.html'
     model = Serie
     
@@ -258,11 +286,13 @@ class SerieListView(LoginRequiredMixin, ListView):
         qs = super().get_queryset().filter(q)
         return qs
         
-class SerieDetailsView(LoginRequiredMixin, DetailView):
+class SerieDetailsView(LoginRequiredMixin,PermissionRequiredMixin, DetailView):
+    permission_required = 'seriados.view_serie'
     template_name = 'series_details.html'
     model = Serie
     
 @login_required
+@permission_required('seriados.add_serie', raise_exception=True)
 def series_insert(request):
     if  request.method == 'GET':
         form = SerieForm()
@@ -281,14 +311,45 @@ def series_insert(request):
         'target_url': 'seriados:series_insert',
     })
 
-class SeriesUpdateView(LoginRequiredMixin, UpdateView):
+class SeriesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = ('seriados.view_serie','seriados.change_serie')
     template_name = 'form_generic.html'
     model = Serie
     fields = ['nome']
     
-class SeriesDeleteView(LoginRequiredMixin, DeleteView):
+class SeriesDeleteView(LoginRequiredMixin,PermissionRequiredMixin, DeleteView):
+    permission_required = 'seriados.delete_serie'
     template_name = 'series_cohfirm_delete.html'
     model = Serie
     
     def get_success_url(self):
         return reverse('seriados:series_list')
+
+
+
+def blog_list(request):
+    categorias = Categoria.objects.all()
+    posts = Blog.objects.all()[:5]
+    context = {'categorias': categorias, 'posts':posts, 'detail_url_post': 'seriados:blog_post', 'detail_url_categorias': 'seriados:blog_categorias'}
+    return render(request, 'blog.html', context)
+
+def post_details(request, pk):
+    _object = get_object_or_404(Blog, pk=pk)
+    context = {
+        'title': "Posts",
+        'data': prepare_data_detail(_object, ['titulo', 'corpo','categoria']),
+    }
+    return render(request, 'post_details.html', context)
+
+
+
+
+def categorias_details(request, pk):
+    _object = get_object_or_404(Categoria, pk=pk)
+    context = {
+        'title': "Categorias",
+        'data': prepare_data_detail(_object, ['titulo', 'url']),
+        'posts': Blog.objects.filter(categoria=_object)[:5],
+        'detail_url_post': 'seriados:blog_post'
+    }
+    return render(request, 'categorias_details.html', context)

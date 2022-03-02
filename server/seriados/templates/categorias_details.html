@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if posts %}
+    <br>
+        <ul>
+        {% for post in posts %}
+            <li><a href={% url detail_url_post pk=post.pk %}>>{{ post.titulo }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Não existem posts para essa categoria.</p>
+    {% endif %}
+
+{% endblock %}

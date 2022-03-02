@@ -7,3 +7,6 @@ admin.site.register(models.Temporada)
 admin.site.register(models.Episodio)
 admin.site.register(models.Revisor)
 admin.site.register(models.ReviewEpisodio)
+admin.site.register(models.Blog)
+admin.site.register(models.Categoria)
+

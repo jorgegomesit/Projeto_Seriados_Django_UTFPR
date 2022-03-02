@@ -128,4 +128,4 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'seriados:episodio_busca_list'
+LOGIN_REDIRECT_URL = 'seriados:episodios_busca_list'

@@ -93,4 +93,27 @@ class ReviewEpisodio(models.Model):
         return reverse("seriados:review_episodios_details", kwargs={"pk": self.pk})
     
 
-    
+class Blog(models.Model):
+    titulo = models.CharField(max_length=100, unique=True, verbose_name="Titulo")
+    url = models.CharField(max_length=100, unique=True,verbose_name="Url")
+    corpo = models.TextField( verbose_name="Corpo")
+    data = models.DateField(db_index=True, auto_now_add=True,verbose_name="Data")
+    categoria = models.ForeignKey('seriados.Categoria',on_delete=models.CASCADE, verbose_name="Categoria")
+
+    def __str__(self):
+        return '%s' % self.titulo
+
+    def get_absolute_url(self):
+        return reverse("seriados:blog_post", kwargs={"pk": self.pk})
+
+
+class Categoria(models.Model):
+    titulo = models.CharField(max_length=100, db_index=True, verbose_name="Titulo")
+    url = models.CharField(max_length=100, db_index=True, verbose_name="Url")
+
+    def __str__(self):
+        return '%s' % self.titulo
+
+    def get_absolute_url(self):
+        return reverse("seriados:blog_categoria", kwargs={"pk": self.pk})
+
